@@ -297,7 +297,6 @@ Indítás
 
 ```
 docker compose up
-```
 
 [+] Building 0.0s (0/0)                                                                                                    docker:default
 [+] Running 3/3
@@ -342,3 +341,20 @@ cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:36.082Z  INFO 7
 cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:36.226Z  INFO 7 --- [           main] hu.cubix.cloud.SecondHomeworkBackapp     : Started SecondHomeworkBackapp in 8.551 seconds (process running for 11.272)
 cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:36.797Z  INFO 8 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
 cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:36.838Z  INFO 8 --- [           main] hu.cubix.cloud.SecondHomeworkFrontapp    : Started SecondHomeworkFrontapp in 8.879 seconds (process running for 11.796)
+```
+
+
+a http://localhost:8080/frontapp?message=Hello
+
+hívás eredménye
+
+```json
+{
+    "msForReply": 281,
+    "backappMessage": "Hello",
+    "frontappHomeworkOwner": "MarkgruberF",
+    "frontappHostAddress": "172.24.0.3",
+    "backappHomeworkOwner": "MarkgruberF",
+    "backappHostAddress": "172.24.0.2",
+    "doExtraImageDataMatch": false
+}
