@@ -45,7 +45,7 @@ java -jar target/cubix-second-homework-frontapp-0.0.1-SNAPSHOT.jar --back.url=ht
 
 A label a Dockerfile-ban lett beállítva.
 
-```docker
+```dockerfile
 FROM eclipse-temurin:17-jre
 
 # Label add as needed 
@@ -87,7 +87,7 @@ FULL - fullstack mód
 
 Ezeket a start.sh-ban használom
 
-```
+```bash
 #!/bin/bash
 
 # Start the backend
@@ -135,7 +135,7 @@ docker inspect homework2:0.1
 ```
 parancs eredménye, ott a label:
 
-```
+```json
 [
     {
         "Id": "sha256:8bfc796fb2b35809f826f33bf51608051c1679d1a874e263f1c31cc59501edf8",
@@ -269,7 +269,7 @@ hívás eredménye
 
 A docker-compose.yaml két példányban indítja el a build-elt image-t, BE és FE módban.
 
-```
+```yaml
 services:
     backend:
         image: homework2:0.1
