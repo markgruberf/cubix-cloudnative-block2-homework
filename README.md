@@ -43,18 +43,6 @@ java -jar target/cubix-second-homework-frontapp-0.0.1-SNAPSHOT.jar --back.url=ht
 
 ## Házifeladat megoldása
 
-A konténerhez bevezettem a kérteken kívül még pár környezeti változót.
-
-BACK_PORT - a backen portja
-
-MODE a konténer üzemmódja. Értékei:
-
-	FE - frontendkén indul el
-	
-	BE - backendként indul el
-	
-	FULL - fullstack mód 
-
 A label a Dockerfile-ban lett beállítva.
 
 ```docker
@@ -84,6 +72,56 @@ COPY --chown=1001 start.sh start.sh
 
 CMD ./start.sh
 ```
+
+A konténerhez bevezettem a kérteken kívül még pár környezeti változót.
+
+BACK_PORT - a backen portja
+
+MODE a konténer üzemmódja. Értékei:
+
+FE - frontendkén indul el
+
+BE - backendként indul el
+	
+FULL - fullstack mód 
+
+Ezeket a start.sh-ban haználom
+
+```
+#!/bin/bash
+
+# Start the backend
+if [[ $MODE == "BE" || $MODE == "FULL" ]]; then
+
+	java -jar backapp.jar --server.port=$BACK_PORT & 
+	
+fi
+
+# in fullstack mode wait 15 secs for backend to start. It would be better to check backend's URL for readiness. 
+
+if [[ $MODE == "FULL" ]]; then
+
+	sleep 15
+	
+fi
+	
+
+# Start the frontend
+if [[ $MODE == "FE" || $MODE == "FULL" ]]; then
+
+	java -jar frontapp.jar --back.url=$BACK_URL &
+	
+fi
+
+
+
+# Wait for any process to exit
+wait -n
+
+# Exit with status of process that exited first
+exit $?
+```
+
 	
 konténer build:
 
