@@ -46,12 +46,44 @@ java -jar target/cubix-second-homework-frontapp-0.0.1-SNAPSHOT.jar --back.url=ht
 A konténerhez bevezettem a kérteken kívül még pár környezeti változót.
 
 BACK_PORT - a backen portja
+
 MODE a konténer üzemmódja. Értékei:
+
 	FE - frontendkén indul el
+	
 	BE - backendként indul el
+	
 	FULL - fullstack mód 
 
 A label a Dockerfile-ban lett beállítva.
+
+```docker
+FROM eclipse-temurin:17-jre
+
+# Label add as needed 
+LABEL "cubix.homework.owner"="Markgruber Ferenc"
+
+# Create apps directory
+RUN mkdir /opt/app && chown 1001 -R /opt/app
+
+# non root user (for higher security) 
+USER 1001
+
+WORKDIR /opt/app
+
+# copy frontend app
+COPY --chown=1001 frontapp/target/*.jar frontapp.jar
+
+# copy backend app
+COPY --chown=1001 backapp/target/*.jar backapp.jar
+ 
+# copy starter script
+
+COPY --chown=1001 start.sh start.sh
+
+
+CMD ./start.sh
+```
 	
 konténer build:
 
@@ -65,6 +97,7 @@ docker inspect homework2:0.1
 ```
 parancs eredménye, ott a label:
 
+```
 [
     {
         "Id": "sha256:8bfc796fb2b35809f826f33bf51608051c1679d1a874e263f1c31cc59501edf8",
@@ -168,6 +201,7 @@ parancs eredménye, ott a label:
     }
 ]
 
+``` 
 
 Indítás fullstack módban:
 
@@ -178,7 +212,7 @@ docker run -p 8080:8080 --rm -d --name hw2 -e BACK_PORT=8081 -e BACK_URL=http://
 a https://host.docker.internal:8081 nálam nem működött
 
 
-A docker-compose.yaml két példányban indítja el a buildelt image-t, BE és FE módban.
+A docker-compose.yaml két példányban indítja el a build-elt image-t, BE és FE módban.
 
 ```
 docker compose up
