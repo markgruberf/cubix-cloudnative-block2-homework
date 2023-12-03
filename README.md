@@ -85,7 +85,7 @@ BE - backendként indul el
 	
 FULL - fullstack mód 
 
-Ezeket a start.sh-ban haználom
+Ezeket a start.sh-ban használom
 
 ```
 #!/bin/bash
@@ -241,16 +241,59 @@ parancs eredménye, ott a label:
 
 ``` 
 
-Indítás fullstack módban:
+Indítás fullstack módban (a https://host.docker.internal:8081 nálam nem működött):
 
 ```
 docker run -p 8080:8080 --rm -d --name hw2 -e BACK_PORT=8081 -e BACK_URL=http://localhost:8081 -e MODE=FULL -e CUBIX_HOMEWORK=MarkgruberF -e APP_DEFAULT_MESSAGE=  homework2:0.1
 ```
 
-a https://host.docker.internal:8081 nálam nem működött
+
+
+
+a http://localhost:8080/frontapp?message=Hello
+
+hívás eredménye
+```json
+{
+    "msForReply": 302,
+    "backappMessage": "Hello",
+    "frontappHomeworkOwner": "MarkgruberF",
+    "frontappHostAddress": "172.17.0.2",
+    "backappHomeworkOwner": "MarkgruberF",
+    "backappHostAddress": "172.17.0.2",
+    "doExtraImageDataMatch": false
+}
+```
+
 
 
 A docker-compose.yaml két példányban indítja el a build-elt image-t, BE és FE módban.
+
+```
+services:
+    backend:
+        image: homework2:0.1
+        environment:
+            BACK_PORT: 8081 
+            BACK_URL:  
+            MODE: BE 
+            CUBIX_HOMEWORK: MarkgruberF  
+            APP_DEFAULT_MESSAGE: 
+            
+    frontend: 
+        image: homework2:0.1
+        ports:
+        - 8080:8080
+        environment:
+            BACK_PORT: 
+            BACK_URL:  http://backend:8081
+            MODE: FE 
+            CUBIX_HOMEWORK: MarkgruberF  
+            APP_DEFAULT_MESSAGE: 
+
+```
+
+Indítás
 
 ```
 docker compose up
