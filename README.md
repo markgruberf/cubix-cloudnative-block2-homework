@@ -79,11 +79,11 @@ BACK_PORT - a backen portja
 
 MODE a konténer üzemmódja. Értékei:
 
-FE - frontendkén indul el
+	-FE - frontendkén indul el
 
-BE - backendként indul el
+	-BE - backendként indul el
 	
-FULL - fullstack mód 
+	-FULL - fullstack mód 
 
 Ezeket a start.sh-ban használom
 
