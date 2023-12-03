@@ -299,3 +299,46 @@ Indítás
 docker compose up
 ```
 
+[+] Building 0.0s (0/0)                                                                                                    docker:default
+[+] Running 3/3
+ ✔ Network cubix-cloudnative-block2-homework_default       Created                                                                   0.1s
+ ✔ Container cubix-cloudnative-block2-homework-backend-1   Created                                                                   0.1s
+ ✔ Container cubix-cloudnative-block2-homework-frontend-1  Created                                                                   0.1s
+Attaching to cubix-cloudnative-block2-homework-backend-1, cubix-cloudnative-block2-homework-frontend-1
+cubix-cloudnative-block2-homework-backend-1   |
+cubix-cloudnative-block2-homework-backend-1   |   .   ____          _            __ _ _
+cubix-cloudnative-block2-homework-backend-1   |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+cubix-cloudnative-block2-homework-backend-1   | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+cubix-cloudnative-block2-homework-backend-1   |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+cubix-cloudnative-block2-homework-backend-1   |   '  |____| .__|_| |_|_| |_\__, | / / / /
+cubix-cloudnative-block2-homework-backend-1   |  =========|_|==============|___/=/_/_/_/
+cubix-cloudnative-block2-homework-backend-1   |  :: Spring Boot ::                (v3.1.5)
+cubix-cloudnative-block2-homework-backend-1   |
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:29.783Z  INFO 7 --- [           main] hu.cubix.cloud.SecondHomeworkBackapp     : Starting SecondHomeworkBackapp v0.0.1-SNAPSHOT using Java 17.0.9 with PID 7 (/opt/app/backapp.jar started by ? in /opt/app)
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:29.788Z  INFO 7 --- [           main] hu.cubix.cloud.SecondHomeworkBackapp     : No active profile set, falling back to 1 default profile: "default"
+cubix-cloudnative-block2-homework-frontend-1  |
+cubix-cloudnative-block2-homework-frontend-1  |   .   ____          _            __ _ _
+cubix-cloudnative-block2-homework-frontend-1  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+cubix-cloudnative-block2-homework-frontend-1  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+cubix-cloudnative-block2-homework-frontend-1  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+cubix-cloudnative-block2-homework-frontend-1  |   '  |____| .__|_| |_|_| |_\__, | / / / /
+cubix-cloudnative-block2-homework-frontend-1  |  =========|_|==============|___/=/_/_/_/
+cubix-cloudnative-block2-homework-frontend-1  |  :: Spring Boot ::                (v3.1.5)
+cubix-cloudnative-block2-homework-frontend-1  |
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:30.402Z  INFO 8 --- [           main] hu.cubix.cloud.SecondHomeworkFrontapp    : Starting SecondHomeworkFrontapp v0.0.1-SNAPSHOT using Java 17.0.9 with PID 8 (/opt/app/frontapp.jar started by ? in /opt/app)
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:30.421Z  INFO 8 --- [           main] hu.cubix.cloud.SecondHomeworkFrontapp    : No active profile set, falling back to 1 default profile: "default"
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:33.524Z  INFO 8 --- [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=4ce0bb17-3cef-3920-83b3-a6b609615a55
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:33.893Z  INFO 7 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:33.917Z  INFO 7 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:33.917Z  INFO 7 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.15]
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:34.267Z  INFO 7 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:34.272Z  INFO 7 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4285 ms
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:34.931Z  INFO 8 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:34.963Z  INFO 8 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:34.964Z  INFO 8 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.15]
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:35.211Z  INFO 8 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:35.218Z  INFO 8 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4435 ms
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:36.082Z  INFO 7 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8081 (http) with context path ''
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:36.226Z  INFO 7 --- [           main] hu.cubix.cloud.SecondHomeworkBackapp     : Started SecondHomeworkBackapp in 8.551 seconds (process running for 11.272)
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:36.797Z  INFO 8 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:36.838Z  INFO 8 --- [           main] hu.cubix.cloud.SecondHomeworkFrontapp    : Started SecondHomeworkFrontapp in 8.879 seconds (process running for 11.796)
