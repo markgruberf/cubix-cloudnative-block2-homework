@@ -1,7 +1,14 @@
-FROM eclipse-temurin:17-jre
+
+FROM quay.io/drsylent/cubix/block2/homework-base:java17 
+
+ARG TYPE=frontapp 
 
 # Label add as needed 
 LABEL "cubix.homework.owner"="Markgruber Ferenc"
+
+# evironmet variables
+ENV CUBIX_HOMEWORK=MarkgruberF 
+ENV APP_DEFAULT_MESSAGE=  
 
 # Create apps directory
 RUN mkdir /opt/app && chown 1001 -R /opt/app
@@ -11,16 +18,10 @@ USER 1001
 
 WORKDIR /opt/app
 
-# copy frontend app
-COPY --chown=1001 frontapp/target/*.jar frontapp.jar
-
-# copy backend app
-COPY --chown=1001 backapp/target/*.jar backapp.jar
- 
-# copy starter script
-
-COPY --chown=1001 start.sh start.sh
-
+# copy  app
+COPY --chown=1001 ${TYPE}/target/*.jar app.jar
+COPY --chown=1001 ${TYPE}/target/start.sh start.sh
 
 CMD ./start.sh
+
 

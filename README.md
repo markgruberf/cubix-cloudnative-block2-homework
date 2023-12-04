@@ -43,13 +43,21 @@ java -jar target/cubix-second-homework-frontapp-0.0.1-SNAPSHOT.jar --back.url=ht
 
 ## Házifeladat megoldása
 
-A label a Dockerfile-ban lett beállítva.
+A label és az env változók a Dockerfile-ban lettek beállítva.
+TYPE határozza meg, hogy milyen konténer készüljön.
+default frontend
 
-```dockerfile
-FROM eclipse-temurin:17-jre
+```Dockerfile
+FROM quay.io/drsylent/cubix/block2/homework-base:java17 
+
+ARG TYPE=frontapp 
 
 # Label add as needed 
 LABEL "cubix.homework.owner"="Markgruber Ferenc"
+
+# evironmet variables
+ENV CUBIX_HOMEWORK=MarkgruberF 
+ENV APP_DEFAULT_MESSAGE=  
 
 # Create apps directory
 RUN mkdir /opt/app && chown 1001 -R /opt/app
@@ -59,93 +67,43 @@ USER 1001
 
 WORKDIR /opt/app
 
-# copy frontend app
-COPY --chown=1001 frontapp/target/*.jar frontapp.jar
-
-# copy backend app
-COPY --chown=1001 backapp/target/*.jar backapp.jar
- 
-# copy starter script
-
-COPY --chown=1001 start.sh start.sh
-
+# copy  app
+COPY --chown=1001 ${TYPE}/target/*.jar app.jar
+COPY --chown=1001 ${TYPE}/target/start.sh start.sh
 
 CMD ./start.sh
 ```
 
-A konténerhez bevezettem a kérteken kívül még pár környezeti változót.
-
-BACK_PORT - a backen portja
-
-MODE a konténer üzemmódja. Értékei:
-
-	-FE - frontendkén indul el
-
-	-BE - backendként indul el
-	
-	-FULL - fullstack mód 
-
-Ezeket a start.sh-ban használom
-
-```bash
-#!/bin/bash
-
-# Start the backend
-if [[ $MODE == "BE" || $MODE == "FULL" ]]; then
-
-	java -jar backapp.jar --server.port=$BACK_PORT & 
-	
-fi
-
-# in fullstack mode wait 15 secs for backend to start. It would be better to check backend's URL for readiness. 
-
-if [[ $MODE == "FULL" ]]; then
-
-	sleep 15
-	
-fi
-	
-
-# Start the frontend
-if [[ $MODE == "FE" || $MODE == "FULL" ]]; then
-
-	java -jar frontapp.jar --back.url=$BACK_URL &
-	
-fi
-
-
-
-# Wait for any process to exit
-wait -n
-
-# Exit with status of process that exited first
-exit $?
-```
-
 	
 konténer build:
+Frontend:
+```
+docker build -f Dockerfile -t frontapp:0.1 .
+```
 
+Backend:
 ```
-docker build -f Dockerfile -t homework2:0.1 .
+docker build -f Dockerfile --build-arg TYPE=backapp -t backapp:0.1 .
 ```
+
 
 A  
 ```
-docker inspect homework2:0.1 
+docker inspect frontapp:0.1 
 ```
 parancs eredménye, ott a label:
 
 ```json
 [
     {
-        "Id": "sha256:8bfc796fb2b35809f826f33bf51608051c1679d1a874e263f1c31cc59501edf8",
+        "Id": "sha256:6b5c9e7c62f1d489920d3c2b88e20013cac140140ca65c6e1f88f61b6dc22ab2",
         "RepoTags": [
-            "homework2:0.1"
+            "frontapp:0.1"
         ],
         "RepoDigests": [],
         "Parent": "",
         "Comment": "buildkit.dockerfile.v0",
-        "Created": "2023-12-03T19:01:03.590990864Z",
+        "Created": "2023-12-04T10:31:44.711083246Z",
         "Container": "",
         "ContainerConfig": {
             "Hostname": "",
@@ -184,7 +142,10 @@ parancs eredménye, ott a label:
                 "LANG=en_US.UTF-8",
                 "LANGUAGE=en_US:en",
                 "LC_ALL=en_US.UTF-8",
-                "JAVA_VERSION=jdk-17.0.9+9"
+                "JAVA_VERSION=jdk-17.0.9+9",
+                "EXTRA_FROM_BASE=Cubix training",
+                "CUBIX_HOMEWORK=MarkgruberF",
+                "APP_DEFAULT_MESSAGE="
             ],
             "Cmd": [
                 "/bin/sh",
@@ -207,142 +168,57 @@ parancs eredménye, ott a label:
         },
         "Architecture": "amd64",
         "Os": "linux",
-        "Size": 323349727,
-        "VirtualSize": 323349727,
+        "Size": 304294135,
+        "VirtualSize": 304294135,
         "GraphDriver": {
             "Data": {
-                "LowerDir": "/var/lib/docker/overlay2/pjibq87znbf8thztnu3w924t1/diff:/var/lib/docker/overlay2/6brmyma4drzic8qas5phnpmy7/diff:/var/lib/docker/overlay2/9lrvndjf7wss31uwwn0722uh2/diff:/var/lib/docker/overlay2/65tt6frmtrq99nd4b5u82s0yu/diff:/var/lib/docker/overlay2/447331fa150a022ddd6bf2c3a3f099587a5c546f1892467b64cff297acd37ba5/diff:/var/lib/docker/overlay2/eda45219711df10b0f6a3b630839fa12601ba52705fc29c912b32617243ee58c/diff:/var/lib/docker/overlay2/2e2e296e8ed26ee8ce2fd123195e3c708026ee3d2022e666dcdec95da07bb8a2/diff:/var/lib/docker/overlay2/b8f721b8f1ccf5a7c09b07f31c1b1792d598637b174a0bd0e4995ed889640edc/diff:/var/lib/docker/overlay2/a51863c2d16eefa4d0db8dd96ac5edb56d2e362c90f951810ea7d5ff18cbd711/diff",
-                "MergedDir": "/var/lib/docker/overlay2/ip7l5eq1if0kzad1axlsnuynx/merged",
-                "UpperDir": "/var/lib/docker/overlay2/ip7l5eq1if0kzad1axlsnuynx/diff",
-                "WorkDir": "/var/lib/docker/overlay2/ip7l5eq1if0kzad1axlsnuynx/work"
+                "LowerDir": "/var/lib/docker/overlay2/jedgym261sbjfgv4eo2vskta3/diff:/var/lib/docker/overlay2/muovnajtlqhlko57en1plviis/diff:/var/lib/docker/overlay2/1ah3szoeq5tihrie2wpdz02sn/diff:/var/lib/docker/overlay2/57a7e9920bc8662a7c51c454eb8a5d9de6dbc8777dfc7944b3b2b043e6a7184f/diff:/var/lib/docker/overlay2/43435068ff0dfb5694857e971b5a21dd0101e127f8775c8ad990d779a4b2cfb1/diff:/var/lib/docker/overlay2/d0850026e7b51840a58d0ac0a0b843ed1f862e0ab328edbc25d0d9395c53f23c/diff:/var/lib/docker/overlay2/b70c6ec775577509b5d84e1cfe0bd5b6377949085bec34d873de20c8882f1b4d/diff:/var/lib/docker/overlay2/3146ac0deac55706c6b1c2c2d94625b0ff49b80859217f62058dddc2cc7717c6/diff",
+                "MergedDir": "/var/lib/docker/overlay2/xqh8xq8v13cy9dm0qjm2r00q4/merged",
+                "UpperDir": "/var/lib/docker/overlay2/xqh8xq8v13cy9dm0qjm2r00q4/diff",
+                "WorkDir": "/var/lib/docker/overlay2/xqh8xq8v13cy9dm0qjm2r00q4/work"
             },
             "Name": "overlay2"
         },
         "RootFS": {
             "Type": "layers",
             "Layers": [
-                "sha256:8ceb9643fb36a8ac65882c07e7b2fff9fd117673d6784221a83d3ad076a9733e",
-                "sha256:3de9bbd55c1d9b722e3195a582388ac023cd61712d45d6f921a19d6b21c62b6f",
-                "sha256:e9db4731c77199fdae06a3937671a4a0051af80faa15b3c9459b61e3c38f6bb0",
-                "sha256:8ddec224834c3dd26b73830159393ae80baa7ceb1650a310bc7c38cd2f75d228",
-                "sha256:c28fdec40c4aa0c7bc3926e4e97a46f50c3bc1731c2e92171027996167f37c70",
-                "sha256:8e5226efcad36381cfb029b4d53149c225ddcd9d3f68ac81a750e4abdb62866d",
+                "sha256:256d88da41857db513b95b50ba9a9b28491b58c954e25477d5dad8abb465430b",
+                "sha256:e62a9b52de75760495bf88acf7f01641a6f2d30b14e1b537fbfda7a4c02631b3",
+                "sha256:ee68869aa760f2546e024f72a49230abd46eefe071e4f4e99a779048488a809e",
+                "sha256:b8c176a5086e931073b679462e7f190334b532ce4d8a362fcc1679b4e420d293",
+                "sha256:c2873c9f3d938d134c70bff4ca9f12c872f2e92260fd1092911cd838db21bc22",
+                "sha256:5d9304511f69d5d0b217b9adba120a2e3cd2f2c732b503c2eb0bfc7781d749d1",
                 "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
-                "sha256:b2a06a4fe4ba582ddcfc1438e8f337ce9d1ab5bab12b3cd5cc6121f0dae4ef44",
-                "sha256:42e8af9d4ef2099610820bc2d43e72c4ffc3839bd84181f96e4d0164bace1bfd",
-                "sha256:8450486a97d19c97f703aec0979908ef22f418595a762ce26f01e52ce29acd35"
+                "sha256:cdf9cb2cfe522798478e9f08c93fc44e93e6d78a9cf20ae07aa3b9f55b4d7223",
+                "sha256:f235eb6dfe4f88ffa76f75199918a043789945a30eabd92d2b87f2f85df40be2"
             ]
         },
         "Metadata": {
-            "LastTagTime": "2023-12-03T19:01:03.666926303Z"
+            "LastTagTime": "2023-12-04T10:31:44.796654585Z"
         }
     }
 ]
 
 ``` 
 
-Indítás fullstack módban (a https://host.docker.internal:8081 nálam nem működött):
-
-```
-docker run -p 8080:8080 --rm -d --name hw2 -e BACK_PORT=8081 -e BACK_URL=http://localhost:8081 -e MODE=FULL -e CUBIX_HOMEWORK=MarkgruberF -e APP_DEFAULT_MESSAGE=  homework2:0.1
-```
 
 
 
 
-a http://localhost:8080/frontapp?message=Hello
-
-hívás eredménye
-```json
-{
-    "msForReply": 302,
-    "backappMessage": "Hello",
-    "frontappHomeworkOwner": "MarkgruberF",
-    "frontappHostAddress": "172.17.0.2",
-    "backappHomeworkOwner": "MarkgruberF",
-    "backappHostAddress": "172.17.0.2",
-    "doExtraImageDataMatch": false
-}
-```
-
-
-
-A docker-compose.yaml két példányban indítja el a build-elt image-t, BE és FE módban.
+A docker-compose.yaml 
 
 ```yaml
 services:
     backend:
-        image: homework2:0.1
-        environment:
-            BACK_PORT: 8081 
-            BACK_URL:  
-            MODE: BE 
-            CUBIX_HOMEWORK: MarkgruberF  
-            APP_DEFAULT_MESSAGE: 
-            
+        image: backapp:0.1
+             
     frontend: 
-        image: homework2:0.1
+        image: frontapp:0.1
         ports:
         - 8080:8080
         environment:
-            BACK_PORT: 
             BACK_URL:  http://backend:8081
-            MODE: FE 
-            CUBIX_HOMEWORK: MarkgruberF  
-            APP_DEFAULT_MESSAGE: 
-
 ```
-
-Indítás
-
-```
-docker compose up
-
-[+] Building 0.0s (0/0)                                                                                                    docker:default
-[+] Running 3/3
- ✔ Network cubix-cloudnative-block2-homework_default       Created                                                                   0.1s
- ✔ Container cubix-cloudnative-block2-homework-backend-1   Created                                                                   0.1s
- ✔ Container cubix-cloudnative-block2-homework-frontend-1  Created                                                                   0.1s
-Attaching to cubix-cloudnative-block2-homework-backend-1, cubix-cloudnative-block2-homework-frontend-1
-cubix-cloudnative-block2-homework-backend-1   |
-cubix-cloudnative-block2-homework-backend-1   |   .   ____          _            __ _ _
-cubix-cloudnative-block2-homework-backend-1   |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-cubix-cloudnative-block2-homework-backend-1   | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
-cubix-cloudnative-block2-homework-backend-1   |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-cubix-cloudnative-block2-homework-backend-1   |   '  |____| .__|_| |_|_| |_\__, | / / / /
-cubix-cloudnative-block2-homework-backend-1   |  =========|_|==============|___/=/_/_/_/
-cubix-cloudnative-block2-homework-backend-1   |  :: Spring Boot ::                (v3.1.5)
-cubix-cloudnative-block2-homework-backend-1   |
-cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:29.783Z  INFO 7 --- [           main] hu.cubix.cloud.SecondHomeworkBackapp     : Starting SecondHomeworkBackapp v0.0.1-SNAPSHOT using Java 17.0.9 with PID 7 (/opt/app/backapp.jar started by ? in /opt/app)
-cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:29.788Z  INFO 7 --- [           main] hu.cubix.cloud.SecondHomeworkBackapp     : No active profile set, falling back to 1 default profile: "default"
-cubix-cloudnative-block2-homework-frontend-1  |
-cubix-cloudnative-block2-homework-frontend-1  |   .   ____          _            __ _ _
-cubix-cloudnative-block2-homework-frontend-1  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-cubix-cloudnative-block2-homework-frontend-1  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
-cubix-cloudnative-block2-homework-frontend-1  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-cubix-cloudnative-block2-homework-frontend-1  |   '  |____| .__|_| |_|_| |_\__, | / / / /
-cubix-cloudnative-block2-homework-frontend-1  |  =========|_|==============|___/=/_/_/_/
-cubix-cloudnative-block2-homework-frontend-1  |  :: Spring Boot ::                (v3.1.5)
-cubix-cloudnative-block2-homework-frontend-1  |
-cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:30.402Z  INFO 8 --- [           main] hu.cubix.cloud.SecondHomeworkFrontapp    : Starting SecondHomeworkFrontapp v0.0.1-SNAPSHOT using Java 17.0.9 with PID 8 (/opt/app/frontapp.jar started by ? in /opt/app)
-cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:30.421Z  INFO 8 --- [           main] hu.cubix.cloud.SecondHomeworkFrontapp    : No active profile set, falling back to 1 default profile: "default"
-cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:33.524Z  INFO 8 --- [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=4ce0bb17-3cef-3920-83b3-a6b609615a55
-cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:33.893Z  INFO 7 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
-cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:33.917Z  INFO 7 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:33.917Z  INFO 7 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.15]
-cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:34.267Z  INFO 7 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:34.272Z  INFO 7 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4285 ms
-cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:34.931Z  INFO 8 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:34.963Z  INFO 8 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:34.964Z  INFO 8 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.15]
-cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:35.211Z  INFO 8 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:35.218Z  INFO 8 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4435 ms
-cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:36.082Z  INFO 7 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8081 (http) with context path ''
-cubix-cloudnative-block2-homework-backend-1   | 2023-12-03T20:06:36.226Z  INFO 7 --- [           main] hu.cubix.cloud.SecondHomeworkBackapp     : Started SecondHomeworkBackapp in 8.551 seconds (process running for 11.272)
-cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:36.797Z  INFO 8 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-cubix-cloudnative-block2-homework-frontend-1  | 2023-12-03T20:06:36.838Z  INFO 8 --- [           main] hu.cubix.cloud.SecondHomeworkFrontapp    : Started SecondHomeworkFrontapp in 8.879 seconds (process running for 11.796)
-```
-
 
 a http://localhost:8080/frontapp?message=Hello
 
@@ -350,11 +226,30 @@ hívás eredménye
 
 ```json
 {
-    "msForReply": 281,
+    "msForReply": 322,
     "backappMessage": "Hello",
     "frontappHomeworkOwner": "MarkgruberF",
-    "frontappHostAddress": "172.24.0.3",
+    "frontappHostAddress": "172.25.0.3",
     "backappHomeworkOwner": "MarkgruberF",
-    "backappHostAddress": "172.24.0.2",
-    "doExtraImageDataMatch": false
+    "backappHostAddress": "172.25.0.2",
+    "doExtraImageDataMatch": true
 }
+
+Log részlet a hívásról
+
+```
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-04T10:56:21.582Z  INFO 7 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-04T10:56:21.583Z  INFO 7 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-04T10:56:21.586Z  INFO 7 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-04T10:56:21.659Z  INFO 7 --- [nio-8080-exec-2] h.c.c.api.controller.FrontappController  : Preparing for calling backapp - message was: Hello
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-04T10:56:21.661Z  INFO 7 --- [nio-8080-exec-2] h.c.c.api.controller.FrontappController  : Calling backapp
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-04T10:56:21.835Z  INFO 8 --- [nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-04T10:56:21.836Z  INFO 8 --- [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-04T10:56:21.841Z  INFO 8 --- [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-04T10:56:21.980Z  INFO 8 --- [nio-8081-exec-1] hu.cubix.cloud.api.BackappController     : Request arrived with message Hello
+cubix-cloudnative-block2-homework-backend-1   | 2023-12-04T10:56:21.994Z  INFO 8 --- [nio-8081-exec-1] hu.cubix.cloud.api.BackappController     : Returning response: BackappResponse[time=2023-12-04T10:56:21.984333718, message=Hello, homeworkOwner=MarkgruberF, hostAddress=172.25.0.2, extraImageData=Cubix training]
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-04T10:56:22.636Z  INFO 7 --- [nio-8080-exec-2] h.c.c.api.controller.FrontappController  : Backapp call was successful, response was: BackappResponse[time=2023-12-04T10:56:21.984333718, message=Hello, homeworkOwner=MarkgruberF, hostAddress=172.25.0.2, extraImageData=Cubix training]
+cubix-cloudnative-block2-homework-frontend-1  | 2023-12-04T10:56:22.654Z  INFO 7 --- [nio-8080-exec-2] h.c.c.api.controller.FrontappController  : Response will be: FrontappResponse[msForReply=322, backappMessage=Hello, frontappHomeworkOwner=MarkgruberF, frontappHostAddress=172.25.0.3, backappHomeworkOwner=MarkgruberF, backappHostAddress=172.25.0.2, doExtraImageDataMatch=true]
+```
+
+
