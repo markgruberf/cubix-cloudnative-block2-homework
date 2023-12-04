@@ -234,6 +234,7 @@ hívás eredménye
     "backappHostAddress": "172.25.0.2",
     "doExtraImageDataMatch": true
 }
+```
 
 Log részlet a hívásról
 
